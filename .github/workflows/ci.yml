@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+    paths: ['Casks/**']
+  push:
+    branches: [main]
+    paths: ['Casks/**']
+
+jobs:
+  audit:
+    name: Audit
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: brew audit
+        run: brew audit --cask Casks/arcbox.rb
+
+  install-test:
+    name: Install Test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: brew install
+        run: brew install --cask Casks/arcbox.rb
+
+      - name: Verify CLI
+        run: abctl version
