@@ -19,6 +19,14 @@ cask "arcbox" do
 
   app "ArcBox.app"
   binary "#{appdir}/ArcBox.app/Contents/MacOS/bin/abctl"
+  binary "#{appdir}/ArcBox.app/Contents/MacOS/xbin/docker"
+  binary "#{appdir}/ArcBox.app/Contents/MacOS/xbin/docker-buildx"
+  binary "#{appdir}/ArcBox.app/Contents/MacOS/xbin/docker-compose"
+  binary "#{appdir}/ArcBox.app/Contents/MacOS/xbin/docker-credential-osxkeychain"
+
+  bash_completion "#{appdir}/ArcBox.app/Contents/Resources/completions/bash/docker"
+  zsh_completion "#{appdir}/ArcBox.app/Contents/Resources/completions/zsh/_docker"
+  fish_completion "#{appdir}/ArcBox.app/Contents/Resources/completions/fish/docker.fish"
 
   postflight do
     system_command "#{appdir}/ArcBox.app/Contents/MacOS/bin/abctl",
