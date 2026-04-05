@@ -1,8 +1,8 @@
 cask "arcbox" do
   arch arm: "arm64"
 
-  version "1.19.4"
-  sha256 arm:   "6f2de1446bb41924495c3917d356d2e836e0a02c8f3765b7c3bc1819e724483d"
+  version "1.19.5"
+  sha256 arm:   "e4e5484c784407d9687813a85ceebc759a93fe7e2707e08ceaad195b37c666ae"
 
   url "https://release.arcboxcdn.com/desktop/v#{version}/ArcBox-#{version}-#{arch}.dmg"
   name "ArcBox"
