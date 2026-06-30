@@ -15,7 +15,7 @@ cask "arcbox" do
   end
 
   auto_updates true
-  depends_on macos: ">= :sequoia"
+  depends_on macos: :sequoia
 
   app "ArcBox.app"
   binary "#{appdir}/ArcBox.app/Contents/MacOS/bin/abctl"
