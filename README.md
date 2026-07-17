@@ -49,3 +49,19 @@ brew install --cask arcboxlabs/tap/arcbox
 ```
 
 Your data (`~/.arcbox`) is preserved — containers, images, and VM data are unaffected.
+
+## Release automation
+
+Product release workflows bump casks via the composite action at
+[`.github/actions/bump-cask`](.github/actions/bump-cask). Callers mint a
+write-scoped App token, compute SHA-256 of their DMG(s), and invoke:
+
+```yaml
+- uses: arcboxlabs/homebrew-tap/.github/actions/bump-cask@master
+  with:
+    token: ${{ steps.tap-token.outputs.token }}
+    cask: linkcode          # or arcbox
+    version: "1.2.3"        # no leading v
+    arm_sha256: ${{ steps.shas.outputs.arm }}
+    intel_sha256: ${{ steps.shas.outputs.intel }}  # omit for arm-only casks
+```

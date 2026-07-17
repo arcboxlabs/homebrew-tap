@@ -1,0 +1,110 @@
+name: Bump Homebrew Cask
+description: >
+  Check out this tap, update a cask's version and sha256 values, and push the
+  commit. Callers mint a write-capable token and compute digests of their own
+  release artifacts; this action only owns the tap edit + push.
+
+inputs:
+  token:
+    description: GitHub token with contents:write on this tap repository
+    required: true
+  cask:
+    description: Cask name without the .rb suffix (e.g. arcbox, linkcode)
+    required: true
+  version:
+    description: Version string without a leading v (e.g. 1.2.3)
+    required: true
+  arm_sha256:
+    description: SHA-256 of the arm64 DMG
+    required: true
+  intel_sha256:
+    description: SHA-256 of the intel/x64 DMG. Omit when the cask is arm-only.
+    required: false
+    default: ""
+  commit-message:
+    description: Commit message. Defaults to "<cask> v<version>".
+    required: false
+    default: ""
+  git-user-name:
+    description: git user.name for the bump commit
+    required: false
+    default: arcbox-labs[bot]
+  git-user-email:
+    description: git user.email for the bump commit
+    required: false
+    default: 254083426+arcbox-labs[bot]@users.noreply.github.com
+  repository:
+    description: Tap repository as owner/name
+    required: false
+    default: arcboxlabs/homebrew-tap
+  path:
+    description: Working-tree path to check the tap out into
+    required: false
+    default: homebrew-tap
+
+runs:
+  using: composite
+  steps:
+    - name: Check out tap
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repository }}
+        token: ${{ inputs.token }}
+        path: ${{ inputs.path }}
+
+    - name: Update cask and push
+      shell: bash
+      env:
+        CASK_NAME: ${{ inputs.cask }}
+        VERSION: ${{ inputs.version }}
+        ARM_SHA: ${{ inputs.arm_sha256 }}
+        INTEL_SHA: ${{ inputs.intel_sha256 }}
+        COMMIT_MESSAGE: ${{ inputs.commit-message }}
+        GIT_USER_NAME: ${{ inputs.git-user-name }}
+        GIT_USER_EMAIL: ${{ inputs.git-user-email }}
+        TAP_PATH: ${{ inputs.path }}
+      run: |
+        set -euo pipefail
+
+        cask="${TAP_PATH}/Casks/${CASK_NAME}.rb"
+        if [ ! -f "$cask" ]; then
+          echo "error: cask not found at ${cask}" >&2
+          exit 1
+        fi
+
+        # 64-hex anchors keep these off the `arch arm:/intel:` labels (arm64/x64).
+        sed -i -E \
+          -e "s/^(  version )\"[^\"]*\"/\1\"${VERSION}\"/" \
+          -e "s/(arm:[[:space:]]+)\"[0-9a-f]{64}\"/\1\"${ARM_SHA}\"/" \
+          "$cask"
+
+        if [ -n "${INTEL_SHA}" ]; then
+          sed -i -E \
+            -e "s/(intel:[[:space:]]+)\"[0-9a-f]{64}\"/\1\"${INTEL_SHA}\"/" \
+            "$cask"
+        fi
+
+        # Fail loudly if any substitution missed (cask format drift) instead of
+        # committing a stale hash.
+        grep -q "  version \"${VERSION}\"" "$cask"
+        grep -q "\"${ARM_SHA}\"" "$cask"
+        if [ -n "${INTEL_SHA}" ]; then
+          grep -q "\"${INTEL_SHA}\"" "$cask"
+        fi
+
+        cd "${TAP_PATH}"
+        git config user.name "${GIT_USER_NAME}"
+        git config user.email "${GIT_USER_EMAIL}"
+
+        if git diff --quiet; then
+          echo "Cask already at v${VERSION}; nothing to bump."
+          exit 0
+        fi
+
+        msg="${COMMIT_MESSAGE}"
+        if [ -z "${msg}" ]; then
+          msg="${CASK_NAME} v${VERSION}"
+        fi
+        git add "Casks/${CASK_NAME}.rb"
+        git commit -m "${msg}"
+        git push
