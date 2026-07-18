@@ -5,8 +5,7 @@ cask "linkcode" do
   sha256 arm:   "fb967a6870b3eda8b9883664abc52af681429288f807a777baf699c1f9faa0a8",
          intel: "5e40a78216fd80dc5f6ae9ba6cd3a257165334fde72f8b943c66f88f8d16e4c6"
 
-  url "https://releases.linkcode.ai/desktop/LinkCode-#{version}-#{arch}.dmg",
-      verified: "releases.linkcode.ai/desktop/"
+  url "https://releases.linkcode.ai/desktop/LinkCode-#{version}-#{arch}.dmg"
   name "LinkCode"
   desc "Desktop client for AI coding agents"
   homepage "https://linkcode.ai/"
