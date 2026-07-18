@@ -9,7 +9,7 @@ inputs:
     description: GitHub token with contents:write on this tap repository
     required: true
   cask:
-    description: Cask name without the .rb suffix (e.g. arcbox, linkcode)
+    description: Cask name without the .rb suffix (e.g. arcbox@latest, linkcode)
     required: true
   version:
     description: Version string without a leading v (e.g. 1.2.3)
@@ -75,6 +75,7 @@ runs:
         # 64-hex anchors keep these off the `arch arm:/intel:` labels (arm64/x64).
         sed -i -E \
           -e "s/^(  version )\"[^\"]*\"/\1\"${VERSION}\"/" \
+          -e "s/^(  sha256 )\"[0-9a-f]{64}\"/\1\"${ARM_SHA}\"/" \
           -e "s/(arm:[[:space:]]+)\"[0-9a-f]{64}\"/\1\"${ARM_SHA}\"/" \
           "$cask"
 

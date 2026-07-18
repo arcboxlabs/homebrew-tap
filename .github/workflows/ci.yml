@@ -2,29 +2,51 @@ name: CI
 
 on:
   pull_request:
-    paths: ['Casks/**']
+    paths: ['Casks/**', 'tap_migrations.json']
   push:
-    branches: [main]
-    paths: ['Casks/**']
+    branches: [master]
+    paths: ['Casks/**', 'tap_migrations.json']
 
 jobs:
   audit:
-    name: Audit
+    name: Audit (${{ matrix.cask }})
     runs-on: macos-latest
+    strategy:
+      matrix:
+        cask: ["arcbox@latest", linkcode]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Tap repository
+        run: brew tap --custom-remote arcboxlabs/tap "$GITHUB_WORKSPACE"
+
+      - name: Trust repository
+        run: brew trust --tap arcboxlabs/tap
 
       - name: brew audit
-        run: brew audit --cask Casks/arcbox.rb
+        run: brew audit --cask "arcboxlabs/tap/${{ matrix.cask }}"
 
   install-test:
-    name: Install Test
+    name: Install Test (${{ matrix.cask }})
     runs-on: macos-latest
+    strategy:
+      matrix:
+        include:
+          - cask: "arcbox@latest"
+            app: ArcBox.app
+          - cask: linkcode
+            app: LinkCode.app
     steps:
       - uses: actions/checkout@v4
 
-      - name: brew install
-        run: brew install --cask Casks/arcbox.rb
+      - name: Tap repository
+        run: brew tap --custom-remote arcboxlabs/tap "$GITHUB_WORKSPACE"
 
-      - name: Verify CLI
-        run: abctl version
+      - name: Trust repository
+        run: brew trust --tap arcboxlabs/tap
+
+      - name: brew install
+        run: brew install --cask "arcboxlabs/tap/${{ matrix.cask }}"
+
+      - name: Verify app
+        run: test -d "/Applications/${{ matrix.app }}"

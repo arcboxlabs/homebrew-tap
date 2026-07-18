@@ -1,21 +1,36 @@
-# Homebrew Tap for ArcBox
+# Homebrew Tap for ArcBox Labs
 
-Official [Homebrew](https://brew.sh) tap for [ArcBox](https://arcbox.dev), a high-performance container and VM runtime for macOS.
+Official [Homebrew](https://brew.sh) tap for ArcBox Labs software. [ArcBox](https://arcbox.dev) is available directly from Homebrew.
 
 ## Install
 
 ```bash
-brew install --cask arcboxlabs/tap/arcbox
+brew install --cask arcbox
 ```
 
 Then open ArcBox from your Applications folder to complete setup.
+
+### Latest release from ArcBox Labs
+
+To install the latest stable release directly from this tap:
+
+```bash
+brew install --cask arcboxlabs/tap/arcbox@latest
+```
+
+`arcbox` and `arcbox@latest` install the same app and cannot coexist. Uninstall
+the current cask before switching between them.
 
 ## Upgrade
 
 ArcBox includes automatic updates via Sparkle. To upgrade manually:
 
 ```bash
-brew upgrade --cask arcbox
+# Official Homebrew cask
+brew upgrade --cask --greedy-auto-updates arcbox
+
+# Latest release from this tap
+brew upgrade --cask --greedy-auto-updates arcboxlabs/tap/arcbox@latest
 ```
 
 ## Uninstall
@@ -45,7 +60,7 @@ rm -f ~/Library/LaunchAgents/dev.arcbox.daemon.plist
 rm -f /usr/local/bin/abctl /usr/local/bin/arcbox-daemon
 
 # Install via Homebrew
-brew install --cask arcboxlabs/tap/arcbox
+brew install --cask arcbox
 ```
 
 Your data (`~/.arcbox`) is preserved — containers, images, and VM data are unaffected.
@@ -60,7 +75,7 @@ write-scoped App token, compute SHA-256 of their DMG(s), and invoke:
 - uses: arcboxlabs/homebrew-tap/.github/actions/bump-cask@19f97aa3ca8a15c3fdbbf018c1b79651bfdebb8d
   with:
     token: ${{ steps.tap-token.outputs.token }}
-    cask: linkcode          # or arcbox
+    cask: arcbox@latest      # or linkcode
     version: "1.2.3"        # no leading v
     arm_sha256: ${{ steps.shas.outputs.arm }}
     intel_sha256: ${{ steps.shas.outputs.intel }}  # omit for arm-only casks
