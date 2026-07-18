@@ -72,7 +72,7 @@ Product release workflows bump casks via the composite action at
 write-scoped App token, compute SHA-256 of their DMG(s), and invoke:
 
 ```yaml
-- uses: arcboxlabs/homebrew-tap/.github/actions/bump-cask@19f97aa3ca8a15c3fdbbf018c1b79651bfdebb8d
+- uses: arcboxlabs/homebrew-tap/.github/actions/bump-cask@6ae026934e8dd30533bbbd73a3be6b7958fe2062
   with:
     token: ${{ steps.tap-token.outputs.token }}
     cask: arcbox@latest      # or linkcode
