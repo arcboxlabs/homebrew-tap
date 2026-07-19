@@ -46,7 +46,7 @@ runs:
   using: composite
   steps:
     - name: Check out tap
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: ${{ inputs.repository }}
         token: ${{ inputs.token }}
