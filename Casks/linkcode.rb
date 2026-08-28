@@ -1,9 +1,9 @@
 cask "linkcode" do
   arch arm: "arm64", intel: "x64"
 
-  version "0.26.1"
-  sha256 arm:   "62fe18e0feb640cabeca58dbef7138d3ea1bdf2cc5c060299956cae307d037cc",
-         intel: "08c64f808c82472451e74bc7176f7605f9c4ed60845b5a5c56f5382fd5d2f615"
+  version "0.28.0"
+  sha256 arm:   "bb4d3b98c482cc2e824130e1b9aceaf2d0a0ff2e0bb97b56470b3f079b44613a",
+         intel: "7a7adaf28b0754f0473fb66f2414388561dfc3d21c104d51256e71138cac4818"
 
   url "https://releases.linkcode.ai/desktop/LinkCode-#{version}-#{arch}.dmg"
   name "LinkCode"
