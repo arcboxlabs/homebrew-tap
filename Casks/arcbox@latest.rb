@@ -2,8 +2,7 @@ cask "arcbox@latest" do
   version "1.37.1"
   sha256 "232153834a966f3616b5f6d7704eb942e97dde2cf9a99b13b48be16d9a22956f"
 
-  url "https://release.arcboxcdn.com/desktop/v#{version}/ArcBox-#{version}-arm64.dmg",
-      verified: "release.arcboxcdn.com/desktop/"
+  url "https://release.arcboxcdn.com/desktop/v#{version}/ArcBox-#{version}-arm64.dmg"
   name "ArcBox Latest"
   desc "Runtime for containers, Linux virtual machines, and AI agent sandboxes"
   homepage "https://arcbox.dev/"
